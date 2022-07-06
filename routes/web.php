@@ -9,6 +9,7 @@ use App\Http\Livewire\Auth\Passwords\Reset;
 use App\Http\Livewire\Auth\Register;
 use App\Http\Livewire\Auth\Verify;
 use Illuminate\Support\Facades\Route;
+use Pokemon\Pokemon;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'welcome')->name('home');
+Route::get('/', function (){
+    Pokemon::Options(['verify' => true]);
+    Pokemon::ApiKey(env('POKEMON_API_KEY'));
+    
+    $cards = Pokemon::Card()->all();
+    dd($cards);
+    foreach($cards as $card){
+        dd($card->toArray());
+    }
+
+})->name('home');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', Login::class)

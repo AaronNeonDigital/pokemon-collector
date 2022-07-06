@@ -18,11 +18,8 @@
 
         <!-- Styles -->
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-        {{-- <link rel="stylesheet" href="{{ url(mix('css/app.css')) }}"> --}}
+        
         @livewireStyles
-
-        <!-- Scripts -->
-        {{-- <script src="{{ url(mix('js/app.js')) }}" defer></script> --}}
 
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
