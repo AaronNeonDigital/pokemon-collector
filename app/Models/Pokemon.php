@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Pokemon extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'evolves_from' => 'array',
+        'evolves_to' => 'array'
+    ];
 }

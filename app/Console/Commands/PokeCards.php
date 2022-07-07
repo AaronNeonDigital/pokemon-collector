@@ -32,6 +32,7 @@ class PokeCards extends Command
      */
     public function handle()
     {
+        ini_set('memory_limit', -1);
         $this->output->title('Pokemon Catcher');
 
         // Truncate DB
@@ -66,22 +67,27 @@ class PokeCards extends Command
             foreach($cards as $card){
 
                 $card = $card->toArray();
+                try {
+                    $pokemon = new ModelsPokemon();
+                    $pokemon->uuid = $card['id'];
+                    $pokemon->name = $card['name'];
+                    $pokemon->super_type = $card['supertype'];
+                    $pokemon->hp = $card['hp'] ?? 0; // may need to make this nullable in the migration?
+                    $pokemon->evolves_from = $card['evolvesFrom'];
+                    $pokemon->evolves_to = $card['evolvesTo'];
+                    $pokemon->converted_retreat_cost = $card['convertedRetreatCost'];
+                    $pokemon->set_number = $card['number'];
+                    $pokemon->artist = $card['artist'];
+                    $pokemon->rarity = $card['rarity'];
+                    $pokemon->flavor_text = $card['flavorText'];
 
-                $pokemon = new ModelsPokemon();
-                $pokemon->uuid = $card['id'];
-                $pokemon->name = $card['name'];
-                $pokemon->super_type = $card['supertype'];
-                $pokemon->hp = $card['hp'] ?? 0; // may need to make this nullable in the migration?
-                // $pokemon->evolves_from = $card['evolvesFrom'];
-                // $pokemon->evolves_to = $card['evolvesTo'];
-                $pokemon->converted_retreat_cost = $card['convertedRetreatCost'];
-                $pokemon->set_number = $card['number'];
-                $pokemon->artist = $card['artist'];
-                $pokemon->rarity = $card['rarity'];
-                $pokemon->flavor_text = $card['flavorText'];
+                    $pokemon->save();
+                    $bar->advance();
+                }
+                catch(Exception $error){
 
-                $pokemon->save();
-                $bar->advance();
+                    $this->output->info('This pokemon fled with an error of: '.$error);
+                }
 
             }
 
