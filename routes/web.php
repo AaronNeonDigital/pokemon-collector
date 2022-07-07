@@ -8,6 +8,7 @@ use App\Http\Livewire\Auth\Passwords\Email;
 use App\Http\Livewire\Auth\Passwords\Reset;
 use App\Http\Livewire\Auth\Register;
 use App\Http\Livewire\Auth\Verify;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Pokemon\Pokemon;
 
@@ -23,14 +24,15 @@ use Pokemon\Pokemon;
 */
 
 Route::get('/', function (){
-    Pokemon::Options(['verify' => true]);
-    Pokemon::ApiKey(env('POKEMON_API_KEY'));
+    $cards = Http::withHeaders([ 'X-Api-Key' => env('POKEMON_API_KEY') ])
+            ->get('https://api.pokemontcg.io/v2/cards?page=1&pageSize=250')
+            ->json();
+
+            foreach($cards['data'] as $x => $card){
+                
+                    dd($card);
     
-    $cards = Pokemon::Card()->all();
-    dd($cards);
-    foreach($cards as $card){
-        dd($card->toArray());
-    }
+            }
 
 })->name('home');
 
