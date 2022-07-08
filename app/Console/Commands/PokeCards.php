@@ -137,18 +137,32 @@ class PokeCards extends Command
                     }
                     if(isset($card['weaknesses'])){
                         foreach($card['weaknesses'] as $weakness){
-                            $newWeakness = new Weakness();
-                            $newWeakness->name = $weakness['type'];
-                            $newWeakness->value = $weakness['value'];
+
+                            $newWeakness = Weakness::where('name', $weakness['type'])->where('value', $weakness['value'])->first();
+                            if(!$newWeakness){
+
+                                $newWeakness = new Weakness();
+                                $newWeakness->name = $weakness['type'];
+                                $newWeakness->value = $weakness['value'];
+                                $newWeakness->save();
+
+                            }
 
                             $pokemon->weakness()->save($newWeakness);
                         }
                     }
                     if(isset($card['resistances'])){
                         foreach($card['resistances'] as $resistance){
-                            $newResistance = new Resistance();
-                            $newResistance->name = $resistance['type'];
-                            $newResistance->value = $resistance['value'];
+
+                            $newResistance = Resistance::where('name', $resistance['type'])->where('value', $resistance['value'])->first();
+                            if(!$newResistance){
+
+                                $newResistance = new Resistance();
+                                $newResistance->name = $resistance['type'];
+                                $newResistance->value = $resistance['value'];
+                                $newResistance->save();
+
+                            }
 
                             $pokemon->resistance()->save($newResistance);
                         }

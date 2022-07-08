@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('resistances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pokemon_id')->constrained();
             $table->string('name')->index();
             $table->string('value');
             $table->timestamps();

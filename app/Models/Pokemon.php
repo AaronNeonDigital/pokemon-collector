@@ -43,12 +43,12 @@ class Pokemon extends Model implements HasMedia
 
     public function weakness()
     {
-        return $this->hasMany(Weakness::class);
+        return $this->belongsToMany(Weakness::class);
     }
 
     public function resistance()
     {
-        return $this->hasMany(Resistance::class);
+        return $this->belongsToMany(Resistance::class);
     }
 
     public function retreatCost()

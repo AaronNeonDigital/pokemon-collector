@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('weaknesses', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->index();
-            $table->string('value');
-            $table->timestamps();
+        Schema::create('pokemon_resistance', function (Blueprint $table) {
+            $table->foreignId('pokemon_id')->constrained();
+            $table->foreignId('resistance_id')->constrained();
         });
     }
 
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('weaknesses');
+        Schema::dropIfExists('pokemon_resistance');
     }
 };
