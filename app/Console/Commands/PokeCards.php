@@ -12,7 +12,9 @@ use App\Models\Weakness;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Pokemon\Pokemon;
 
 class PokeCards extends Command
@@ -45,14 +47,29 @@ class PokeCards extends Command
         $this->output->info('Creating Pokeballs');
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('pokemon')->truncate();
+        DB::table('attacks')->truncate();
+        DB::table('media')->truncate();
+        DB::table('pokemon_type')->truncate();
+        DB::table('resistances')->truncate();
+        DB::table('retreat_costs')->truncate();
+        DB::table('sets')->truncate();
+        DB::table('sub_types')->truncate();
+        DB::table('types')->truncate();
+        DB::table('weaknesses')->truncate();
+        DB::table('pokemon_type')->truncate();
+        DB::table('pokemon_sub_type')->truncate();
+        DB::table('pokemon_retreat_cost')->truncate();
 
+        File::deleteDirectory(public_path('media'));
         //Get how many pages we need to go through
         $this->output->info('Getting net ready!');
 
+        // dd('truncating');
+        
         // Create progress bar and print some console shiz
         $this->output->info('Looking for 15050 Pokemon');
         $bar = $this->output->createProgressBar(15050);
-        
+
         // totalCount 15050
         for($i=1; 2; $i++){
 
@@ -77,18 +94,31 @@ class PokeCards extends Command
 
                     $pokemon->save();
 
-                    if(isset($card['subtypes'])){ //Change to belongsToMany
+                    if(isset($card['subtypes'])){
                         foreach($card['subtypes'] as $subType){
-                            $newSubType = new SubType();
-                            $newSubType->name = $subType;
+
+                            $newSubType = SubType::where('name', $subType)->first();
+                            if(!$newSubType){
+
+                                $newSubType = new SubType();
+                                $newSubType->name = $subType;
+                                $newSubType->save();
+                            }
 
                             $pokemon->subTypes()->save($newSubType);
                         }
                     }
-                    if(isset($card['types'])){ //Change to belongsToMany
+                    if(isset($card['types'])){
                         foreach($card['types'] as $type){
-                            $newType = new Type();
-                            $newType->name = $type;
+
+                            $newType = Type::where('name', $type)->first();
+                            if(!$newType){
+
+                                $newType = new Type();
+                                $newType->name = $type;
+                                $newType->save();
+
+                            }
 
                             $pokemon->types()->save($newType);
                         }
@@ -123,20 +153,25 @@ class PokeCards extends Command
                             $pokemon->resistance()->save($newResistance);
                         }
                     }
-                    if(isset($card['retreatCost'])){ //Change to belongsToMany
+                    if(isset($card['retreatCost'])){
                         foreach($card['retreatCost'] as $retreatCost){
-                            $newRetreatCost = new RetreatCost();
-                            $newRetreatCost->name = $retreatCost;
+                            $newRetreatCost = RetreatCost::where('name', $retreatCost)->first();
+                            if(!$newRetreatCost){
+
+                                $newRetreatCost = new RetreatCost();
+                                $newRetreatCost->name = $retreatCost;
+                                $newRetreatCost->save();
+
+                            }
 
                             $pokemon->retreatCost()->save($newRetreatCost);
                         }
                     }
-                    if(isset($card['images'])){ //Change to belongsToMany
+                    if(isset($card['images'])){
                         foreach($card['images'] as $image){
                             $pokemon->addMediaFromUrl($image)->toMediaCollection('media');
                         }
                     }
-
 
                     /**
                      * set and pricing to think about
@@ -145,7 +180,6 @@ class PokeCards extends Command
                     $bar->advance();
     
             }
-            sleep(4);
         }      
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');  
 

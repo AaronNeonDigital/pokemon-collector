@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('retreat_costs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pokemon_id')->constrained();
             $table->string('name')->index();
             $table->timestamps();
         });

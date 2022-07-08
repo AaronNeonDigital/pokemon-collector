@@ -28,12 +28,12 @@ class Pokemon extends Model implements HasMedia
 
     public function subTypes()
     {
-        return $this->hasMany(SubType::class);
+        return $this->belongsToMany(SubType::class);
     }
 
     public function types()
     {
-        return $this->hasMany(Type::class);
+        return $this->belongsToMany(Type::class);
     }
 
     public function attacks()
@@ -53,6 +53,6 @@ class Pokemon extends Model implements HasMedia
 
     public function retreatCost()
     {
-        return $this->hasMany(RetreatCost::class);
+        return $this->belongsToMany(RetreatCost::class);
     }
 }

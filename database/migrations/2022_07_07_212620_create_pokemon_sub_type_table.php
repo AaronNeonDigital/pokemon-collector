@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->index();
-            $table->timestamps();
+        Schema::create('pokemon_sub_type', function (Blueprint $table) {            
+            $table->foreignId('pokemon_id')->constrained();
+            $table->foreignId('sub_type_id')->constrained();
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('types');
+        Schema::dropIfExists('pokemon_sub_type');
     }
 };

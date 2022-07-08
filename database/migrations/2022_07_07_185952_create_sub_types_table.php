@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('sub_types', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pokemon_id')->constrained()->index();
             $table->string('name')->index();
             $table->timestamps();
         });
